@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start Menu to BSOD</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Fullscreen containers for views */
+        #start-menu, #player-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Start Menu Background */
+        #start-menu {
+            background-image: url('back.jpg');
+            background-size: cover;
+            background-position: center;
+            z-index: 2;
+        }
+
+        /* Start Button styling */
+        #start-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        #start-btn img {
+            width: 200px; /* Adjust this size to fit your button image nicely */
+            height: auto;
+            transition: transform 0.1s ease;
+        }
+
+        #start-btn img:hover {
+            transform: scale(1.05); /* Slight grow effect on hover */
+        }
+
+        /* Video and BSOD container */
+        #player-container {
+            z-index: 1;
+            background-color: #000;
+        }
+
+        video, img#bsod {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #bsod {
+            display: none;
+            z-index: 3;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Start Menu Screen -->
+    <div id="start-menu">
+        <button id="start-btn">
+            <img src="button.png" alt="Start Button">
+        </button>
+    </div>
+
+    <!-- Video and BSOD Screen -->
+    <div id="player-container">
+        <video id="intro-clip" src="clip.mp4" playsinline></video>
+        <img id="bsod" src="bsod.jpg" alt="Blue Screen of Death">
+    </div>
+
+    <script>
+        const startMenu = document.getElementById('start-menu');
+        const startBtn = document.getElementById('start-btn');
+        const video = document.getElementById('intro-clip');
+        const bsod = document.getElementById('bsod');
+
+        function showBSOD() {
+            video.style.display = 'none';
+            bsod.style.display = 'block';
+        }
+
+        // When the user clicks the start button
+        startBtn.addEventListener('click', () => {
+            // Hide the start menu
+            startMenu.style.display = 'none';
+            
+            // Play the video with sound enabled since the user just interacted with the page
+            video.play();
+        });
+
+        // Trigger BSOD when the video ends
+        video.addEventListener('ended', showBSOD);
+
+        // Fallback timer: force switch to BSOD after 6 seconds
+        video.addEventListener('play', () => {
+            setTimeout(() => {
+                if (video.style.display !== 'none' && bsod.style.display !== 'block') {
+                    showBSOD();
+                }
+            }, 6000);
+        });
+    </script>
+
+</body>
+</html>
